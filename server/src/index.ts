@@ -4,6 +4,7 @@ import { connnectToDB } from "../config/dbconfig";
 import { Users } from "../models/user.model";
 import cors from "cors";
 import { compare, hash } from "bcryptjs";
+import { createTestAccount, createTransport } from "nodemailer";
 require("dotenv").config();
 
 const app: express.Application = express();
@@ -20,7 +21,7 @@ app.get("/tasks", async (req: Request, res: Response) => {
     const verified: any = verify(token, SECRET_KEY);
 
     const user = await Users.findOne({ email: verified.email });
-
+    //TODO:: need to return the tasks user.tasks
     res.status(200).json({ status: 200, message: "Success" });
   } catch (err) {
     console.log(err);
@@ -71,6 +72,36 @@ app.post("/signup", async (req: Request, res: Response) => {
   } catch (err) {
     console.log(err);
     res.json({ status: 400, message: "Error" });
+  }
+});
+
+app.post("/send-mail", async (req: Request, res: Response) => {
+  try {
+    const testAccount: any = await createTestAccount();
+    const transporter: any = createTransport({
+      service: "gmail",
+      auth: {
+        user: "sachin2252sharma@gmail.com",
+        pass: "@horux12",
+      },
+    });
+
+    const mail: any = await transporter.sendMail(
+      {
+        from: "sachin2252sharma@gmail.com",
+        to: "arpit2252@gmail.com",
+        subject: "kdbfvkfdbghkjd",
+        text: "dfbghjdbgjngjbgdukdshu",
+        html: "<h1>Hello</h1>",
+      },
+      (err: any, info: any) => {
+        console.log(info.response);
+      }
+    );
+    res.status(200).json({ status: 200, message: "Success" });
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ status: 400, message: "Error" });
   }
 });
 
