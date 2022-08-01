@@ -7,6 +7,7 @@ import { compare, hash } from "bcryptjs";
 import { createTestAccount, createTransport } from "nodemailer";
 require("dotenv").config();
 
+const sib:any = require("sib-api-v3-sdk");
 const app: express.Application = express();
 app.use(cors());
 app.use(express.json());
@@ -20,7 +21,7 @@ app.get("/tasks", async (req: Request, res: Response) => {
   try {
     const verified: any = verify(token, SECRET_KEY);
 
-    const user = await Users.findOne({ email: verified.email });
+    const user: any = await Users.findOne({ email: verified.email });
     //TODO:: need to return the tasks user.tasks
     res.status(200).json({ status: 200, message: "Success" });
   } catch (err) {
@@ -77,27 +78,44 @@ app.post("/signup", async (req: Request, res: Response) => {
 
 app.post("/send-mail", async (req: Request, res: Response) => {
   try {
-    const testAccount: any = await createTestAccount();
-    const transporter: any = createTransport({
-      service: "gmail",
-      auth: {
-        user: "sachin2252sharma@gmail.com",
-        pass: "@horux12",
-      },
-    });
+    const apiInstance = new sib.SMTPApi();
+    const apiKey = apiInstance.authentications["apiKey"];
+    apiKey.apiKey =
+      "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";
 
-    const mail: any = await transporter.sendMail(
-      {
-        from: "sachin2252sharma@gmail.com",
-        to: "arpit2252@gmail.com",
-        subject: "kdbfvkfdbghkjd",
-        text: "dfbghjdbgjngjbgdukdshu",
-        html: "<h1>Hello</h1>",
+    const partnerKey = apiInstance.authenticationsd["partnerKey"];
+    partnerKey.apiKey =
+      "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";
+
+    const sendEmail = {
+      to: [
+        {
+          email: "arpit2252@gmail.com",
+          name: "arpit",
+        },
+      ],
+      templateId: 59,
+      params: {
+        name: "Sachin",
+        surname: "Sharma",
       },
-      (err: any, info: any) => {
-        console.log(info.response);
+      headers: {
+        "api-key":
+          "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",
+        "content-type": "application/json",
+        accept: "application/json",
+      },
+    };
+
+    apiInstance.sendTransacEmail(sendEmail).then(
+      (data:any) => {
+        console.log("DataSend");
+      },
+      (err:any) => {
+        console.log(err);
       }
     );
+
     res.status(200).json({ status: 200, message: "Success" });
   } catch (err) {
     console.log(err);

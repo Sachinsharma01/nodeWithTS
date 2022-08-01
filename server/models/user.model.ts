@@ -6,22 +6,28 @@ interface userDataInterface extends mongoose.Document {
   password: string;
 }
 
-const userSchema: any = new mongoose.Schema({
-  userName: {
-    type: String,
-    required: true,
-    unique: true
+const userSchema: any = new mongoose.Schema(
+  {
+    userName: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    tasks: {
+      type: Array,
+      default:[]
+    }
   },
-  email: {
-    type: String,
-    required: true,
-    unique: true
-  },
-  password: {
-    type: String,
-    required: true,
-  }},
-  {collection: 'users'}
+  { collection: "users" }
 );
 
-export const Users =  mongoose.model<userDataInterface>("Users", userSchema);
+export const Users = mongoose.model<userDataInterface>("Users", userSchema);
