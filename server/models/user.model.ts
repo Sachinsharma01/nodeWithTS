@@ -1,14 +1,14 @@
 import mongoose from "mongoose";
 
 interface userDataInterface extends mongoose.Document {
-  userName: string;
+  name: string;
   email: string;
   password: string;
 }
 
 const userSchema: any = new mongoose.Schema(
   {
-    userName: {
+    name: {
       type: String,
       required: true,
       unique: true,
@@ -21,6 +21,14 @@ const userSchema: any = new mongoose.Schema(
     password: {
       type: String,
       required: true,
+    },
+    salary: {
+      type:Number,
+      required: true,
+    },
+    role: {
+      type: String,
+      required: true
     },
     tasks: {
       type: Array,
