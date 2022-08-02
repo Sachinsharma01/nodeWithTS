@@ -9,6 +9,7 @@ import { MessageClient } from "cloudmailin";
 import { Workbook } from "exceljs";
 import { validateSchema } from "../helpers/ValidateSchema";
 import { readFileSync } from "fs";
+import axios from "axios";
 // import sib from "sib-api-v3-sdk";
 require("dotenv").config();
 
@@ -112,34 +113,52 @@ app.post("/send-email", async (req: Request, res: Response) => {
     //   subject: "Hello World",
     // });
 
-    const { user, pass } = await createTestAccount();
-    console.log(user + " " + pass);
-    const mailTransporter = createTransport({
-      host: "smtp.ethereal.email",
-      port: 587,
-      secure: false,
-      requireTLS: true,
-      // service: "gmail",
-      auth: {
-        user: "devw2252@gmail.com",
-        pass: "@horux12",
+    // const { user, pass } = await createTestAccount();
+    // console.log(user + " " + pass);
+    // const mailTransporter = createTransport({
+    //   host: "smtp.ethereal.email",
+    //   port: 587,
+    //   secure: false,
+    //   requireTLS: true,
+    //   // service: "gmail",
+    //   auth: {
+    //     user: "devw2252@gmail.com",
+    //     pass: "@horux12",
+    //   },
+    // });
+    // const mail = {
+    //   from: "devw2252@gmail.com",
+    //   to: "devw2252@gmail.com",
+    //   subject: "Test mail",
+    //   text: "it is just a testing mail",
+    // };
+
+    const options = {
+      method: "POST",
+      url: "https://rapidprod-sendgrid-v1.p.rapidapi.com/mail/send",
+      headers: {
+        "content-type": "application/json",
+        "X-RapidAPI-Key": "eb43ec6272mshefd653be6b7c4cfp1b67c2jsnc32ed688b822",
+        "X-RapidAPI-Host": "rapidprod-sendgrid-v1.p.rapidapi.com",
       },
-    });
-    const mail = {
-      from: "devw2252@gmail.com",
-      to: "devw2252@gmail.com",
-      subject: "Test mail",
-      text: "it is just a testing mail",
+      data: '{"personalizations":[{"to":[{"email":"arpit2252@gmail.com"}],"subject":"Hello, World!"}],"from":{"email":"arpit2252@gmail.com"},"content":[{"type":"text/plain","value":"Hello, World!"}]}',
     };
 
-    mailTransporter.sendMail(mail, function (err, info) {
-      if (err) {
-        res.status(500).json({ status: 500, message: "Error" });
-        console.log(err);
-      } else {
-        res.status(200).json({ status: 200, message: "Success" });
-      }
-    });
+    const response: any = await axios.request(options);
+    console.log(response);
+    const data = await response.json;
+
+    res.status(200).json({ status: 200, message: "Email sent", data: data });
+
+    // console.log(response);
+    // mailTransporter.sendMail(mail, function (err, info) {
+    //   if (err) {
+    //     res.status(500).json({ status: 500, message: "Error" });
+    //     console.log(err);
+    //   } else {
+    //     res.status(200).json({ status: 200, message: "Success" });
+    //   }
+    // });
   } catch (err) {
     console.log(err);
     res.status(500).json({ status: 500, message: "Error" });
@@ -174,7 +193,7 @@ app.get("/getexcel", async (req: Request, res: Response) => {
 
     workbook.xlsx.writeFile("UsersList.xlsx").then(async (data: any) => {
       const content: any = readFileSync("UsersList.xlsx");
-      const buffer = new Buffer(content).toString('base64');
+      const buffer = new Buffer(content).toString("base64");
 
       res.status(200).json({ status: 200, message: "Success", data: buffer });
     });
