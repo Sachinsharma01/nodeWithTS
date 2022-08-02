@@ -4,21 +4,20 @@ import { connnectToDB } from "../config/dbconfig";
 import { Users } from "../models/user.model";
 import cors from "cors";
 import { compare, hash } from "bcryptjs";
-import { createTestAccount, createTransport } from "nodemailer";
-import { MessageClient } from "cloudmailin";
 import { Workbook } from "exceljs";
 import { validateSchema } from "../helpers/ValidateSchema";
 import { readFileSync } from "fs";
 import axios from "axios";
-// import sib from "sib-api-v3-sdk";
+
+
 require("dotenv").config();
 
 const app: express.Application = express();
 app.use(cors());
 app.use(express.json());
 
-const PORT: any = process.env.PORT;
-const SECRET_KEY: any = process.env.SECRET_TOKEN;
+const PORT: number = Number(process.env.PORT);
+const SECRET_KEY: any = Number(process.env.SECRET_TOKEN);
 
 app.get("/getuser", async (req: Request, res: Response) => {
   // const SECRET_KEY: any = process.env.SECRET_TOKEN;
