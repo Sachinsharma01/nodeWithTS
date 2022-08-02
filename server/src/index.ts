@@ -100,46 +100,21 @@ app.post("/signup", async (req: Request, res: Response) => {
 });
 
 app.post("/send-email", async (req: Request, res: Response) => {
-  const client: any = new MessageClient({
-    username: "be2b2f948c506dea",
-    apiKey: "UueW3aQY8tPWfRiziRbrUbE9",
-  });
   try {
-    // const response: any = await client.sendMessage({
-    //   to: "wofapo7736@walinee.com",
-    //   from: "arpit2252@gmail.com",
-    //   plain: "test message",
-    //   html: "<h1>test message</h1>",
-    //   subject: "Hello World",
-    // });
+    const token: any = req.headers["x-access-token"];
 
-    // const { user, pass } = await createTestAccount();
-    // console.log(user + " " + pass);
-    // const mailTransporter = createTransport({
-    //   host: "smtp.ethereal.email",
-    //   port: 587,
-    //   secure: false,
-    //   requireTLS: true,
-    //   // service: "gmail",
-    //   auth: {
-    //     user: "devw2252@gmail.com",
-    //     pass: "@horux12",
-    //   },
-    // });
-    // const mail = {
-    //   from: "devw2252@gmail.com",
-    //   to: "devw2252@gmail.com",
-    //   subject: "Test mail",
-    //   text: "it is just a testing mail",
-    // };
+    const verified: any = verify(token, SECRET_KEY);
+    console.log(verified);
+    if (!verified)
+      res.status(500).json({ status: 500, message: "Unauthorized User" });
 
-    const options = {
+    const options: any = {
       method: "POST",
-      url: "https://rapidprod-sendgrid-v1.p.rapidapi.com/mail/send",
+      url: process.env.EMAIL_URL,
       headers: {
         "content-type": "application/json",
-        "X-RapidAPI-Key": "eb43ec6272mshefd653be6b7c4cfp1b67c2jsnc32ed688b822",
-        "X-RapidAPI-Host": "rapidprod-sendgrid-v1.p.rapidapi.com",
+        "X-RapidAPI-Key": process.env.API_KEY,
+        "X-RapidAPI-Host": process.env.HOST,
       },
       data: '{"personalizations":[{"to":[{"email":"arpit2252@gmail.com"}],"subject":"Hello, World!"}],"from":{"email":"arpit2252@gmail.com"},"content":[{"type":"text/plain","value":"Hello, World!"}]}',
     };
@@ -149,16 +124,6 @@ app.post("/send-email", async (req: Request, res: Response) => {
     const data = await response.json;
 
     res.status(200).json({ status: 200, message: "Email sent", data: data });
-
-    // console.log(response);
-    // mailTransporter.sendMail(mail, function (err, info) {
-    //   if (err) {
-    //     res.status(500).json({ status: 500, message: "Error" });
-    //     console.log(err);
-    //   } else {
-    //     res.status(200).json({ status: 200, message: "Success" });
-    //   }
-    // });
   } catch (err) {
     console.log(err);
     res.status(500).json({ status: 500, message: "Error" });
