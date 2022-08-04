@@ -1,13 +1,17 @@
-import React from 'react';
-import './App.css';
+import React from "react";
+import Navbar from "./components/Navbar/Navbar";
+import "./App.css";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <div className="heading">Hello React with TS</div>
-      </header>
-    </div>
+    <>
+      <Navbar />
+      <div className="App bg-dark">
+        <header className="App-header">
+          <div className="heading">Hello React with TS</div>
+        </header>
+      </div>
+    </>
   );
 }
 
