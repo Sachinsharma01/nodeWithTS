@@ -2,6 +2,7 @@ import React from "react";
 
 const Navbar = () => {
   return (
+    // !using bootstrp navbar classes to make a responsive navbar
     <div className="navbar bg-dark navbar-lg">
         <div className="d-flex flex-row justify-content-between align-items-center w-100 mx-3">
           <div>
