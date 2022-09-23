@@ -78,10 +78,10 @@ app.post("/signup", async (req: Request, res: Response) => {
     const userExists: any = Users.findOne({ email: req.body.email });
 
     if (userExists.name)
-      res.status(404).json({ status: 500, message: "User already Exists" });
+      res.status(400).json({ status: 500, message: "User already Exists" });
 
     if (!validSchema)
-      res.status(500).json({ status: 500, message: "Invalid Details" });
+      res.status(400).json({ status: 500, message: "Invalid Details" });
 
     const hashedPassword: any = await hash(req.body.password, 10);
     await Users.create({
