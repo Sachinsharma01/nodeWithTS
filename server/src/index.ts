@@ -28,14 +28,14 @@ app.get("/getuser", async (req: Request, res: Response) => {
     const verified: any = verify(token, SECRET_KEY);
     console.log(verified);
     if (!verified)
-      res.status(500).json({ status: 500, message: "Unauthorized User" });
+      res.status(401).json({ status: 500, message: "Unauthorized User" });
 
     const user: any = await Users.findOne({ email: verified.email });
     //TODO:: need to return the tasks user.tasks
     res.status(200).json({ status: 200, message: "Success", data: user });
   } catch (err) {
     console.log(err);
-    res.status(500).json({ status: 500, messsage: "Error" });
+    res.status(400).json({ status: 500, messsage: "Error" });
   }
 });
 
@@ -48,7 +48,7 @@ app.post("/login", async (req: Request, res: Response) => {
     console.log(user);
 
     if (!user)
-      res.status(500).json({ status: 500, message: "User does not exists" });
+      res.status(404).json({ status: 500, message: "User does not exists" });
 
     const passwordIsValid = await compare(req.body.password, user.password);
     // console.log(user)/
@@ -65,7 +65,7 @@ app.post("/login", async (req: Request, res: Response) => {
 
       res.status(200).json({ status: 200, message: "Success", token });
     } else {
-      res.status(500).json({ status: 500, message: "Error" });
+      res.status(400).json({ status: 500, message: "Error" });
     }
   } catch (err) {
     console.log(err);
@@ -95,7 +95,7 @@ app.post("/signup", async (req: Request, res: Response) => {
     res.status(200).json({ status: 200, message: "Success", data: [] });
   } catch (err) {
     console.log(err);
-    res.status(500).json({ status: 500, message: "Error" });
+    res.status(400).json({ status: 500, message: "Error" });
   }
 });
 
@@ -116,7 +116,7 @@ app.post("/send-email", async (req: Request, res: Response) => {
         "X-RapidAPI-Key": process.env.API_KEY,
         "X-RapidAPI-Host": process.env.HOST,
       },
-      data: '{"personalizations":[{"to":[{"email":"arpit2252@gmail.com"}],"subject":"Hello, World!"}],"from":{"email":"arpit2252@gmail.com"},"content":[{"type":"text/plain","value":"Hello, World!"}]}',
+      data: `{"personalizations":[{"to":[{"email":"arpit2252@gmail.com"}],"subject":"Hello, World!"}],"from":{"email":"arpit2252@gmail.com"},"content":[{"type":"text/plain","value":"Hello, World!"}]}`,
     };
 
     const response: any = await axios.request(options);

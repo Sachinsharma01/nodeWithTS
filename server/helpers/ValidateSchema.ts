@@ -6,7 +6,7 @@ const userSchema: any = Joi.object({
   password: Joi.string().min(3).max(15).trim(true).required(),
   tasks: Joi.array(),
   salary: Joi.number().required(),
-  role: Joi.string().trim(true).required()
+  role: Joi.string().trim(true).required(),
   //  items(Joi.string().alphanum().trim(true))
 });
 
