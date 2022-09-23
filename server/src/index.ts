@@ -17,7 +17,7 @@ app.use(cors());
 app.use(express.json());
 
 const PORT: number = Number(process.env.PORT);
-const SECRET_KEY: any = Number(process.env.SECRET_TOKEN);
+const SECRET_KEY: any = process.env.SECRET_TOKEN;
 
 app.get("/getuser", async (req: Request, res: Response) => {
   // const SECRET_KEY: any = process.env.SECRET_TOKEN;
@@ -61,7 +61,7 @@ app.post("/login", async (req: Request, res: Response) => {
         },
         SECRET_KEY
       );
-
+      console.log(token)
       res.status(200).json({ status: 200, message: "Success", token });
     } else {
       res.status(400).json({ status: 500, message: "Error" });
